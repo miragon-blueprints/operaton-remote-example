@@ -76,21 +76,17 @@ class OpenApiSpecExportTest {
         return response.body();
     }
 
-    /** Walk up from the module working directory to the Maven reactor root (the topmost {@code pom.xml}). */
+    /** Walk up from the module working directory until the directory holding the shared {@code openapi/} contract is found. */
     private Path repoRoot() {
         Path dir = Path.of(System.getProperty("user.dir")).toAbsolutePath();
-        Path root = null;
         while (dir != null) {
-            if (Files.exists(dir.resolve("pom.xml"))) {
-                root = dir;
+            if (Files.isDirectory(dir.resolve("openapi"))) {
+                return dir;
             }
             dir = dir.getParent();
         }
-        if (root == null) {
-            throw new IllegalStateException(
-                    "could not locate the repo root (no pom.xml found above "
-                            + System.getProperty("user.dir") + ")");
-        }
-        return root;
+        throw new IllegalStateException(
+                "could not locate the repo root (no openapi directory found above "
+                        + System.getProperty("user.dir") + ")");
     }
 }
