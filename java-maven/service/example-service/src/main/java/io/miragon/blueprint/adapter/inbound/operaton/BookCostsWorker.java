@@ -2,8 +2,8 @@ package io.miragon.blueprint.adapter.inbound.operaton;
 
 import io.miragon.blueprint.application.port.inbound.BookCancellationCostsUseCase;
 import io.miragon.blueprint.domain.bike.OrderId;
-import io.miragon.blueprint.process.CancelBikeOrderProcessApi.ServiceTasks;
-import io.miragon.blueprint.process.CancelBikeOrderProcessApi.Variables;
+import io.miragon.blueprint.process.ServiceTasks;
+import io.miragon.blueprint.process.CancelBikeOrderProcessApi.FlowNodes;
 import org.operaton.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.operaton.bpm.client.task.ExternalTask;
 import org.operaton.bpm.client.task.ExternalTaskService;
@@ -22,7 +22,7 @@ public class BookCostsWorker extends BaseExternalTaskWorker {
     @Override
     protected void executeTask(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         // `orderId` is handed to the cancelBikeOrder sub-process by the calling activity.
-        OrderId orderId = new OrderId(externalTask.getVariable(Variables.StartEventCancellationRequired.ORDER_ID.getValue()));
+        OrderId orderId = new OrderId(externalTask.getVariable(FlowNodes.StartEventCancellationRequired.Variables.ORDER_ID.getValue()));
         useCase.bookCosts(orderId);
         externalTaskService.complete(externalTask);
     }

@@ -2,9 +2,8 @@ package io.miragon.blueprint.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Messages;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Variables;
-import io.miragon.bpmn.runtime.ElementId;
+import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.FlowNodes;
+import io.miragon.bpmn.runtime.FlowNode;
 import io.miragon.bpmn.runtime.MessageName;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -79,12 +78,12 @@ public final class ProcessDriveUtils {
      * Fires the timer job of the given boundary/catch event directly, regardless of its due date — the
      * tests verify the timer path is wired correctly, not the real-world waiting duration.
      */
-    public static void fireTimer(ProcessEngine engine, ElementId timerActivityId) {
+    public static void fireTimer(ProcessEngine engine, FlowNode timerEvent) {
         Job timer = engine.getManagementService().createJobQuery().timers()
-                .activityId(timerActivityId.getValue()).singleResult();
+                .activityId(timerEvent.getId().getValue()).singleResult();
         if (timer == null) {
             throw new IllegalArgumentException(
-                    "no timer job found for activity '" + timerActivityId.getValue() + "'");
+                    "no timer job found for activity '" + timerEvent.getId().getValue() + "'");
         }
         engine.getManagementService().executeJob(timer.getId());
         executeAsyncContinuations(engine);
@@ -130,10 +129,10 @@ public final class ProcessDriveUtils {
     /** Starts the process through its message start event, keyed by {@code businessKey}, then settles the plumbing. */
     public static void startLeasing(ProcessEngine engine, String businessKey, int age, double income, String bikeId) {
         Map<String, Object> variables = new LinkedHashMap<>();
-        variables.put(Variables.StartEventLeasingRequestReceived.APPLICATION_ID.getValue(), businessKey);
-        variables.put(Variables.StartEventLeasingRequestReceived.BIKE_ID.getValue(), bikeId);
-        variables.put(Variables.StartEventLeasingRequestReceived.MONTHLY_NET_INCOME.getValue(), income);
-        variables.put(Variables.StartEventLeasingRequestReceived.AGE.getValue(), age);
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.APPLICATION_ID.getValue(), businessKey);
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.BIKE_ID.getValue(), bikeId);
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.MONTHLY_NET_INCOME.getValue(), income);
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.AGE.getValue(), age);
         engine.getRuntimeService().startProcessInstanceByMessage(
                 Messages.MIRAVELO_LEASING_REQUEST_RECEIVED.getValue(),
                 businessKey,

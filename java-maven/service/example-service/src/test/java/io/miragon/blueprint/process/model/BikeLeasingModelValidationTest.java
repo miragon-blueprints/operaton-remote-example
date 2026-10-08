@@ -1,7 +1,7 @@
 package io.miragon.blueprint.process.model;
 
 import io.miragon.bpmn.domain.shared.ProcessEngine;
-import io.miragon.bpmn.domain.validation.SingleModelValidationRule;
+import io.miragon.bpmn.domain.validation.ValidationRule;
 import io.miragon.bpmn.testing.BpmnRules;
 import io.miragon.bpmn.testing.BpmnValidator;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ class BikeLeasingModelValidationTest {
 
     @Test
     void theBpmnModelsSatisfyAllRulesAndOnlyUseExternalTaskTopics() {
-        List<SingleModelValidationRule> rules = new ArrayList<>(BpmnRules.all());
+        List<ValidationRule> rules = new ArrayList<>(BpmnRules.all());
         rules.add(new ServiceTaskExternalTopicRule());
         BpmnValidator
                 .fromClasspath("bpmn/")

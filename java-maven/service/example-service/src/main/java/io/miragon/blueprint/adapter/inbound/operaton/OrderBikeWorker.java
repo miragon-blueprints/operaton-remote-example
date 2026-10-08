@@ -2,8 +2,8 @@ package io.miragon.blueprint.adapter.inbound.operaton;
 
 import io.miragon.blueprint.application.port.inbound.OrderBikeUseCase;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.ServiceTasks;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Variables;
+import io.miragon.blueprint.process.ServiceTasks;
+import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.FlowNodes;
 import java.util.HashMap;
 import java.util.Map;
 import org.operaton.bpm.client.spring.annotation.ExternalTaskSubscription;
@@ -43,9 +43,9 @@ public class OrderBikeWorker extends BaseExternalTaskWorker {
         // Output variables the process routes on (`bikeAvailable`) and later reuses (`orderId`).
         Map<String, Object> variables = new HashMap<>();
         variables.put(
-                Variables.ServiceTaskOrderBike.ORDER_ID.getValue(),
+                FlowNodes.ServiceTaskOrderBike.Variables.ORDER_ID.getValue(),
                 result.orderId() != null ? result.orderId().value() : null);
-        variables.put(Variables.ServiceTaskOrderBike.BIKE_AVAILABLE.getValue(), result.bikeAvailable());
+        variables.put(FlowNodes.ServiceTaskOrderBike.Variables.BIKE_AVAILABLE.getValue(), result.bikeAvailable());
         externalTaskService.complete(externalTask, variables);
     }
 }

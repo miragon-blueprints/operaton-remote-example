@@ -2,8 +2,8 @@ package io.miragon.blueprint.adapter.inbound.operaton;
 
 import io.miragon.blueprint.application.port.inbound.RequestOrderCancellationUseCase;
 import io.miragon.blueprint.domain.bike.OrderId;
-import io.miragon.blueprint.process.CancelBikeOrderProcessApi.ServiceTasks;
-import io.miragon.blueprint.process.CancelBikeOrderProcessApi.Variables;
+import io.miragon.blueprint.process.ServiceTasks;
+import io.miragon.blueprint.process.CancelBikeOrderProcessApi.FlowNodes;
 import java.util.Map;
 import org.operaton.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.operaton.bpm.client.task.ExternalTask;
@@ -22,10 +22,10 @@ public class RequestCancellationWorker extends BaseExternalTaskWorker {
 
     @Override
     protected void executeTask(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        OrderId orderId = new OrderId(externalTask.getVariable(Variables.StartEventCancellationRequired.ORDER_ID.getValue()));
+        OrderId orderId = new OrderId(externalTask.getVariable(FlowNodes.StartEventCancellationRequired.Variables.ORDER_ID.getValue()));
         boolean cancellationPossible = useCase.requestCancellation(orderId);
         externalTaskService.complete(
                 externalTask,
-                Map.of(Variables.ServiceTaskRequestCancellation.CANCELLATION_POSSIBLE.getValue(), cancellationPossible));
+                Map.of(FlowNodes.ServiceTaskRequestCancellation.Variables.CANCELLATION_POSSIBLE.getValue(), cancellationPossible));
     }
 }

@@ -3,7 +3,7 @@ package io.miragon.blueprint.adapter.inbound.operaton;
 import io.miragon.blueprint.application.port.inbound.ValidateApplicationUseCase;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
 import io.miragon.blueprint.domain.leasing.ApplicationInvalidException;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.ServiceTasks;
+import io.miragon.blueprint.process.ServiceTasks;
 import org.operaton.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.operaton.bpm.client.task.ExternalTask;
 import org.operaton.bpm.client.task.ExternalTaskService;

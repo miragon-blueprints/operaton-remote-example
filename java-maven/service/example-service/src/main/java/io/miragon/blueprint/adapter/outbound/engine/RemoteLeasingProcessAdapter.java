@@ -4,9 +4,8 @@ import io.miragon.blueprint.application.port.outbound.LeasingProcess;
 import io.miragon.blueprint.domain.bike.BikeId;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
 import io.miragon.blueprint.domain.leasing.LeasingApplication;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Elements;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Messages;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Variables;
+import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.FlowNodes;
+import io.miragon.blueprint.process.Messages;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +49,13 @@ public class RemoteLeasingProcessAdapter implements LeasingProcess {
     @Override
     public void submitRequest(LeasingApplication application) {
         Map<String, VariableValueDto> variables = new LinkedHashMap<>();
-        variables.put(Variables.StartEventLeasingRequestReceived.APPLICATION_ID.getValue(),
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.APPLICATION_ID.getValue(),
                 typedVar(application.id().value().toString()));
-        variables.put(Variables.StartEventLeasingRequestReceived.BIKE_ID.getValue(),
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.BIKE_ID.getValue(),
                 typedVar(application.bikeId().value()));
-        variables.put(Variables.StartEventLeasingRequestReceived.MONTHLY_NET_INCOME.getValue(),
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.MONTHLY_NET_INCOME.getValue(),
                 typedVar(application.monthlyNetIncome()));
-        variables.put(Variables.StartEventLeasingRequestReceived.AGE.getValue(),
+        variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.AGE.getValue(),
                 typedVar(application.age()));
         messageApi.deliverMessage(new CorrelationMessageDto()
                 .messageName(Messages.MIRAVELO_LEASING_REQUEST_RECEIVED.getValue())
@@ -86,12 +85,12 @@ public class RemoteLeasingProcessAdapter implements LeasingProcess {
      */
     @Override
     public void completeAlternativeClarification(ApplicationId id, boolean alternativeFound, BikeId bikeId) {
-        String taskId = findTaskId(id, Elements.USER_TASK_CLARIFY_ALTERNATIVE.getValue());
+        String taskId = findTaskId(id, FlowNodes.UserTaskClarifyAlternative.ELEMENT_ID);
         Map<String, VariableValueDto> variables = new LinkedHashMap<>();
-        variables.put(Variables.UserTaskClarifyAlternative.ALTERNATIVE_FOUND.getValue(), typedVar(alternativeFound));
+        variables.put(FlowNodes.UserTaskClarifyAlternative.Variables.ALTERNATIVE_FOUND.getValue(), typedVar(alternativeFound));
         // The re-order reads the same start-injected bike variable, so reuse its name.
         if (bikeId != null) {
-            variables.put(Variables.StartEventLeasingRequestReceived.BIKE_ID.getValue(), typedVar(bikeId.value()));
+            variables.put(FlowNodes.StartEventLeasingRequestReceived.Variables.BIKE_ID.getValue(), typedVar(bikeId.value()));
         }
         taskApi.complete(taskId, new CompleteTaskDto().variables(variables));
         log.info("Completed clarify-alternative task ({}) for application {}", taskId, id.value());

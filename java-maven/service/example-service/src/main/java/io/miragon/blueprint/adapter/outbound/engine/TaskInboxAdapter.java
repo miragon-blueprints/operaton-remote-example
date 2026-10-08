@@ -2,7 +2,7 @@ package io.miragon.blueprint.adapter.outbound.engine;
 
 import io.miragon.blueprint.application.port.outbound.TaskInboxPort;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
-import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.Elements;
+import io.miragon.blueprint.process.BikeLeasingProcessProcessApi.FlowNodes;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class TaskInboxAdapter implements TaskInboxPort {
     @Override
     public List<OpenClarification> findOpenClarifications() {
         List<TaskWithAttachmentAndCommentDto> tasks = taskApi.queryTasks(null, null,
-                new TaskQueryDto().taskDefinitionKey(Elements.USER_TASK_CLARIFY_ALTERNATIVE.getValue()));
+                new TaskQueryDto().taskDefinitionKey(FlowNodes.UserTaskClarifyAlternative.ELEMENT_ID));
         List<OpenClarification> clarifications = new ArrayList<>();
         for (TaskWithAttachmentAndCommentDto task : tasks) {
             String processInstanceId = task.getProcessInstanceId();
