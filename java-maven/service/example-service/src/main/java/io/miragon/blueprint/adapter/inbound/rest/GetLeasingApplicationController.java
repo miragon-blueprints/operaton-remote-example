@@ -1,8 +1,11 @@
 package io.miragon.blueprint.adapter.inbound.rest;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import io.miragon.blueprint.application.port.inbound.GetLeasingApplicationQuery;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
 import io.miragon.blueprint.domain.leasing.LeasingApplication;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,13 +46,13 @@ public class GetLeasingApplicationController {
     }
 
     public record LeasingApplicationDto(
-            String applicationId,
-            String customerName,
-            String email,
-            String bikeId,
-            String bikeModel,
-            String status,
-            String orderId,
-            String contractId) {
+            @Schema(requiredMode = REQUIRED) String applicationId,
+            @Schema(requiredMode = REQUIRED) String customerName,
+            @Schema(requiredMode = REQUIRED) String email,
+            @Schema(requiredMode = REQUIRED) String bikeId,
+            @Schema(nullable = true) String bikeModel,
+            @Schema(requiredMode = REQUIRED) String status,
+            @Schema(nullable = true) String orderId,
+            @Schema(nullable = true) String contractId) {
     }
 }

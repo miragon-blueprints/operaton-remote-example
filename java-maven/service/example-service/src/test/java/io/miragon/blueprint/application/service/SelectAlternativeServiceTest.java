@@ -1,6 +1,7 @@
 package io.miragon.blueprint.application.service;
 
 import static io.miragon.blueprint.domain.leasing.TestObjectBuilder.testLeasingApplication;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -16,8 +17,10 @@ import io.miragon.blueprint.application.port.outbound.LeasingApplicationReposito
 import io.miragon.blueprint.application.port.outbound.LeasingProcess;
 import io.miragon.blueprint.domain.bike.Bike;
 import io.miragon.blueprint.domain.bike.BikeId;
+import io.miragon.blueprint.domain.leasing.ApplicationId;
 import io.miragon.blueprint.domain.leasing.LeasingApplication;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class SelectAlternativeServiceTest {
@@ -64,6 +67,21 @@ class SelectAlternativeServiceTest {
         // then: neither the portfolio nor the application is touched, and the task is completed as declined
         verify(repository).findById(application.id());
         verify(process).completeAlternativeClarification(application.id(), false, null);
+        verifyNoMoreInteractions(repository, bikePortfolio, process);
+    }
+
+    @Test
+    void anUnknownApplicationIsReportedByItsPlainId() {
+
+        // given: no application is stored under the id
+        ApplicationId id = new ApplicationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // when / then: the decision is refused, naming the id as the client sent it
+        assertThatThrownBy(() -> underTest.selectAlternative(new SelectAlternativeUseCase.Command(id, false, null, null)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Unknown application 123e4567-e89b-12d3-a456-426614174000");
+        verify(repository).findById(id);
         verifyNoMoreInteractions(repository, bikePortfolio, process);
     }
 }

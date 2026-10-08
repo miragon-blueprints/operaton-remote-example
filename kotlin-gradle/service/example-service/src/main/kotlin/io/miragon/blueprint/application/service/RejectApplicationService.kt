@@ -15,7 +15,7 @@ class RejectApplicationService(
 ) : RejectApplicationUseCase {
 
     override fun reject(id: ApplicationId) {
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         notification.send("Your bike-leasing application was rejected", application)
         repository.save(application.reject())
     }

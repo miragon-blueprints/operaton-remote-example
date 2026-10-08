@@ -1,8 +1,11 @@
 package io.miragon.blueprint.adapter.inbound.rest;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import io.miragon.blueprint.application.port.inbound.SelectAlternativeUseCase;
 import io.miragon.blueprint.domain.bike.BikeId;
 import io.miragon.blueprint.domain.leasing.ApplicationId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +41,8 @@ public class SelectAlternativeController {
     }
 
     public record AlternativeDecisionInput(
-            boolean alternativeFound,
-            String bikeId,
-            String bikeModel) {
+            @Schema(requiredMode = REQUIRED) boolean alternativeFound,
+            @Schema(nullable = true) String bikeId,
+            @Schema(nullable = true) String bikeModel) {
     }
 }

@@ -15,7 +15,7 @@ class OrderBikeService(
 ) : OrderBikeUseCase {
 
     override fun orderBike(id: ApplicationId): OrderBikeUseCase.Result {
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         if (!bikeDealer.checkAvailability(application.bikeId)) {
             return OrderBikeUseCase.Result(orderId = null, bikeAvailable = false)
         } else {

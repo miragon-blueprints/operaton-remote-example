@@ -1,7 +1,10 @@
 package io.miragon.blueprint.adapter.inbound.rest;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import io.miragon.blueprint.application.port.inbound.ListBikesQuery;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +34,8 @@ public class ListBikesController {
     }
 
     public record BikeDto(
-            String bikeId,
-            String model,
-            boolean available) {
+            @Schema(requiredMode = REQUIRED) String bikeId,
+            @Schema(requiredMode = REQUIRED) String model,
+            @Schema(requiredMode = REQUIRED) boolean available) {
     }
 }

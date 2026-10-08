@@ -13,9 +13,9 @@ class CancelContractService(
 ) : CancelContractUseCase {
 
     override fun cancelContract(id: ApplicationId) {
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         // Revoke the contract the contract system issued earlier (its id is recorded on the application).
-        val contractId = application.contractId ?: error("No contract issued for application $id")
+        val contractId = application.contractId ?: error("No contract issued for application ${id.value}")
         contract.revokeContract(contractId)
     }
 }

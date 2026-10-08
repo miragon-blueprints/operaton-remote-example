@@ -24,7 +24,7 @@ public class OrderBikeService implements OrderBikeUseCase {
     @Override
     public OrderBikeUseCase.Result orderBike(ApplicationId id) {
         LeasingApplication application = repository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Unknown application " + id));
+                .orElseThrow(() -> new IllegalStateException("Unknown application " + id.value()));
         if (!bikeDealer.checkAvailability(application.bikeId())) {
             return new OrderBikeUseCase.Result(null, false);
         } else {

@@ -21,7 +21,7 @@ class WithdrawApplicationService(
      */
     override fun withdraw(id: ApplicationId) {
         process.correlateApplicationWithdrawn(id)
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         repository.save(application.withdraw())
     }
 }

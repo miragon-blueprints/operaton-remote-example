@@ -29,7 +29,7 @@ public class WithdrawApplicationService implements WithdrawApplicationUseCase {
     public void withdraw(ApplicationId id) {
         process.correlateApplicationWithdrawn(id);
         LeasingApplication application = repository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Unknown application " + id));
+                .orElseThrow(() -> new IllegalStateException("Unknown application " + id.value()));
         repository.save(application.withdraw());
     }
 }

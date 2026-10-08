@@ -18,7 +18,7 @@ public class ValidateApplicationService implements ValidateApplicationUseCase {
     @Override
     public void validate(ApplicationId id) {
         LeasingApplication application = repository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Unknown application " + id));
+                .orElseThrow(() -> new IllegalStateException("Unknown application " + id.value()));
         application.validate();
     }
 }

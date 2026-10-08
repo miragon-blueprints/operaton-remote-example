@@ -1,9 +1,12 @@
 package io.miragon.blueprint.adapter.inbound.rest;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.miragon.blueprint.application.port.inbound.GetPendingClarificationsQuery;
 import io.miragon.blueprint.domain.leasing.PendingClarification;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +48,12 @@ public class GetPendingClarificationsController {
     }
 
     public record PendingClarificationDto(
-            String applicationId,
-            String customerName,
-            String requestedBikeId,
-            String requestedBikeModel,
+            @Schema(requiredMode = REQUIRED) String applicationId,
+            @Schema(requiredMode = REQUIRED) String customerName,
+            @Schema(requiredMode = REQUIRED) String requestedBikeId,
+            @Schema(nullable = true) String requestedBikeModel,
             // ISO-8601 string — see the note in GetLeasingApplicationController.LeasingApplicationDto.
+            @Schema(requiredMode = REQUIRED)
             @JsonFormat(shape = JsonFormat.Shape.STRING)
             LocalDateTime waitingSince) {
     }

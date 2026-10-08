@@ -15,7 +15,7 @@ class SendCancellationConfirmationService(
 ) : SendCancellationConfirmationUseCase {
 
     override fun sendCancellationConfirmation(id: ApplicationId) {
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         notification.send("Your bike-leasing application has been cancelled", application)
         repository.save(application.cancel())
     }

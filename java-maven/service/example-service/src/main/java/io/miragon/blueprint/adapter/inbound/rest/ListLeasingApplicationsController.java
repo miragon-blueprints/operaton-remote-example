@@ -1,12 +1,16 @@
 package io.miragon.blueprint.adapter.inbound.rest;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.miragon.blueprint.application.port.inbound.ListLeasingApplicationsQuery;
 import io.miragon.blueprint.domain.leasing.LeasingStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +47,7 @@ public class ListLeasingApplicationsController {
 
     private LeasingStatus parseStatus(String raw) {
         try {
-            return LeasingStatus.valueOf(raw.toUpperCase());
+            return LeasingStatus.valueOf(raw.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
                     "unknown status '" + raw + "'; expected one of "
@@ -72,20 +76,21 @@ public class ListLeasingApplicationsController {
     }
 
     public record LeasingApplicationPageDto(
-            List<LeasingApplicationSummaryDto> items,
-            int page,
-            int size,
-            long totalElements,
-            int totalPages) {
+            @Schema(requiredMode = REQUIRED) List<LeasingApplicationSummaryDto> items,
+            @Schema(requiredMode = REQUIRED) int page,
+            @Schema(requiredMode = REQUIRED) int size,
+            @Schema(requiredMode = REQUIRED) long totalElements,
+            @Schema(requiredMode = REQUIRED) int totalPages) {
     }
 
     public record LeasingApplicationSummaryDto(
-            String applicationId,
-            String customerName,
-            String bikeId,
-            String bikeModel,
-            String status,
+            @Schema(requiredMode = REQUIRED) String applicationId,
+            @Schema(requiredMode = REQUIRED) String customerName,
+            @Schema(requiredMode = REQUIRED) String bikeId,
+            @Schema(nullable = true) String bikeModel,
+            @Schema(requiredMode = REQUIRED) String status,
             // ISO-8601 string — see the note in GetLeasingApplicationController.LeasingApplicationDto.
+            @Schema(requiredMode = REQUIRED)
             @JsonFormat(shape = JsonFormat.Shape.STRING)
             LocalDateTime createdAt) {
     }

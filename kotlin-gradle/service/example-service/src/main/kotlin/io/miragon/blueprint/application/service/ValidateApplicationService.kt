@@ -11,7 +11,7 @@ class ValidateApplicationService(
 ) : ValidateApplicationUseCase {
 
     override fun validate(id: ApplicationId) {
-        val application = repository.findById(id) ?: error("Unknown application $id")
+        val application = repository.findById(id) ?: error("Unknown application ${id.value}")
         application.validate()
     }
 }

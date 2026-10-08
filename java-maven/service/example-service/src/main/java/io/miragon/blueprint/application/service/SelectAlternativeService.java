@@ -30,7 +30,7 @@ public class SelectAlternativeService implements SelectAlternativeUseCase {
     @Override
     public void selectAlternative(SelectAlternativeUseCase.Command command) {
         LeasingApplication application = repository.findById(command.applicationId())
-                .orElseThrow(() -> new IllegalStateException("Unknown application " + command.applicationId()));
+                .orElseThrow(() -> new IllegalStateException("Unknown application " + command.applicationId().value()));
         BikeId alternativeBike = command.bikeId();
         if (command.alternativeFound() && alternativeBike != null) {
             // Register the chosen alternative in the portfolio (its model may be new), then point the application at it.
